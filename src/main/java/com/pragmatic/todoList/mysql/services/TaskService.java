@@ -1,6 +1,7 @@
 package com.pragmatic.todoList.mysql.services;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import com.pragmatic.todoList.mysql.entities.TaskEntity;
 import com.pragmatic.todoList.mysql.repositories.TaskRepository;
 
 @Service
+@Transactional
 public class TaskService {
 
 	@Autowired

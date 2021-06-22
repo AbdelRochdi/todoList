@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "com.pragmatic.todoList.postgres",entityManagerFactoryRef = "secondTaskEntityManagerFactory", transactionManagerRef = "secondTaskTransactionManager")
+@EnableJpaRepositories(basePackages = "com.pragmatic.todoList.postgres", entityManagerFactoryRef = "secondTaskEntityManagerFactory", transactionManagerRef = "secondTaskTransactionManager")
 public class SecondTaskDBConfig {
 
 	@Bean(name = "secondTaskDatasource")
@@ -33,7 +33,7 @@ public class SecondTaskDBConfig {
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(EntityManagerFactoryBuilder builder,
 			@Qualifier("secondTaskDatasource") DataSource dataSource) {
 		Map<String, Object> properties = new HashMap<>();
-		properties.put("hibernate.hbm2ddl.auto", "create-drop");
+		properties.put("hibernate.hbm2ddl.auto", "update");
 		return builder.dataSource(dataSource).properties(properties).packages("com.pragmatic.todoList.postgres")
 				.persistenceUnit("SecondTaskEntity").build();
 	}

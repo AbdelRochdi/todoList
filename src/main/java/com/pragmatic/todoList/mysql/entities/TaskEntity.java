@@ -24,11 +24,12 @@ public class TaskEntity {
 	private Long id;
 	@NotBlank
 	private String title;
+	private String status;
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date createdAt;
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDate;
-	
+
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
 	@JoinColumn(name = "user_id")
 	private UserEntity userEntity;
@@ -36,6 +37,7 @@ public class TaskEntity {
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = new Date();
+		this.status = "Undone";
 	}
 
 	public UserEntity getUserEntity() {
@@ -77,8 +79,13 @@ public class TaskEntity {
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
-	
-	
-	
-	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 }
