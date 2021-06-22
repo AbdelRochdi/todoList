@@ -1,4 +1,4 @@
-package com.pragmatic.todoList.entities.user;
+package com.pragmatic.todoList.mysql.entities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +11,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.pragmatic.todoList.entities.task.TaskEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 
 @Entity
+@Table(name = "users", schema = "todolist")
 public class UserEntity {
 
 	@Id
@@ -34,6 +38,7 @@ public class UserEntity {
 	@Size(min = 8, message = "Your password must have at least 8 caracters")
 	private String password;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userEntity")
 	private List<TaskEntity> tasksList;
 

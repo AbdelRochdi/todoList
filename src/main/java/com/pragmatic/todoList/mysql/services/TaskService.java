@@ -1,12 +1,12 @@
-package com.pragmatic.todoList.services;
+package com.pragmatic.todoList.mysql.services;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pragmatic.todoList.entities.task.TaskEntity;
-import com.pragmatic.todoList.repositories.task.TaskRepository;
+import com.pragmatic.todoList.mysql.entities.TaskEntity;
+import com.pragmatic.todoList.mysql.repositories.TaskRepository;
 
 @Service
 public class TaskService {

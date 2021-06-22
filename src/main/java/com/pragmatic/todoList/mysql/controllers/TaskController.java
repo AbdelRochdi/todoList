@@ -1,4 +1,4 @@
-package com.pragmatic.todoList.controllers;
+package com.pragmatic.todoList.mysql.controllers;
 
 import javax.validation.Valid;
 
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.pragmatic.todoList.entities.task.TaskEntity;
-import com.pragmatic.todoList.services.TaskService;
+import com.pragmatic.todoList.mysql.entities.TaskEntity;
+import com.pragmatic.todoList.mysql.services.TaskService;
 
 @Controller
 @RequestMapping("/api/tasks")

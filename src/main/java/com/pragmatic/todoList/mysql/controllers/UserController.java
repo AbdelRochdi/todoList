@@ -1,4 +1,4 @@
-package com.pragmatic.todoList.controllers;
+package com.pragmatic.todoList.mysql.controllers;
 
 import javax.validation.Valid;
 
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.pragmatic.todoList.entities.user.UserEntity;
-import com.pragmatic.todoList.services.UserService;
+import com.pragmatic.todoList.mysql.entities.UserEntity;
+import com.pragmatic.todoList.mysql.services.UserService;
 
 @Controller
 @RequestMapping("/api/users")

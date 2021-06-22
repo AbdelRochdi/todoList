@@ -1,4 +1,4 @@
-package com.pragmatic.todoList.entities.task;
+package com.pragmatic.todoList.mysql.entities;
 
 import java.util.Date;
 
@@ -10,12 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.pragmatic.todoList.entities.user.UserEntity;
 
 @Entity
+@Table(name = "tasks", schema = "todolist")
 public class TaskEntity {
 
 	@Id

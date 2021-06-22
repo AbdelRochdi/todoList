@@ -1,12 +1,12 @@
-package com.pragmatic.todoList.services;
+package com.pragmatic.todoList.mysql.services;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pragmatic.todoList.entities.user.UserEntity;
-import com.pragmatic.todoList.repositories.user.UserRepository;
+import com.pragmatic.todoList.mysql.entities.UserEntity;
+import com.pragmatic.todoList.mysql.repositories.UserRepository;
 
 @Service
 public class UserService {
