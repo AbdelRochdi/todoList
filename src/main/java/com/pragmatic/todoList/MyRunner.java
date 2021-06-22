@@ -20,7 +20,7 @@ public class MyRunner implements CommandLineRunner {
 		
 		SecondTaskEntity secondTaskEntity = new SecondTaskEntity();	
 		
-		secondTaskEntity.setDueDate(new SimpleDateFormat("yyyy-MM-dd").parse("2020/10/10"));
+		secondTaskEntity.setDueDate(new SimpleDateFormat("yyyy-MM-dd").parse("2021-06-22"));
 		secondTaskEntity.setTitle("something");
 		
 		secondTaskRepository.save(secondTaskEntity);
