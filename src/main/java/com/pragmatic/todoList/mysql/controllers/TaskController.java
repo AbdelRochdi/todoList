@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pragmatic.todoList.mysql.entities.TaskEntity;
-import com.pragmatic.todoList.mysql.services.TaskService;
+import com.pragmatic.todoList.mysql.services.TaskServiceImpl;
 
 @Controller
 @RequestMapping("/api/tasks")
 public class TaskController {
 
 	@Autowired
-	private TaskService taskService;
+	private TaskServiceImpl taskService;
 
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllTasks() {

@@ -7,5 +7,7 @@ import com.pragmatic.todoList.mysql.entities.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+	UserEntity findByEmail(String lowerCase);
 	
 }

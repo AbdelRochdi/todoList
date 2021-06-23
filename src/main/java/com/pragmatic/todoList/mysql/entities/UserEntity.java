@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
 @Table(name = "users", schema = "todolist")
 public class UserEntity {
@@ -35,7 +34,7 @@ public class UserEntity {
 	private String email;
 	@NotBlank(message = "Please enter a valid password")
 	@Size(min = 8, message = "Your password must have at least 8 caracters")
-	private String password;
+	private String encryptedPassword;
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userEntity")
@@ -73,12 +72,12 @@ public class UserEntity {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getEncryptedPassword() {
+		return encryptedPassword;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
 	}
 
 	public void addTask(TaskEntity taskEntity) {

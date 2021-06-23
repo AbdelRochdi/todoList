@@ -1,5 +1,7 @@
 package com.pragmatic.todoList.mysql.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +14,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pragmatic.todoList.mysql.entities.UserEntity;
-import com.pragmatic.todoList.mysql.services.UserService;
+import com.pragmatic.todoList.mysql.services.UserServiceImpl;
 
 @Controller
 @RequestMapping("/api/users")
 public class UserController {
 
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 
 	@PostMapping("")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody UserEntity userEntity) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody UserEntity userEntity) throws Exception {
 
 		UserEntity savedUserEntity = userService.createUserEntity(userEntity);
 
@@ -33,9 +36,13 @@ public class UserController {
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<?> getAllUsers() {
-		Iterable<UserEntity> tasks = userService.findAllUsers();
-		return new ResponseEntity<Iterable<UserEntity>>(tasks, HttpStatus.OK);
+	public ResponseEntity<List<UserEntity>> getAllUsers(@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "limit", defaultValue = "15") int limit) {
+
+		List<UserEntity> users = userService.findAllUsers(page, limit);
+
+		return new ResponseEntity<>(users, HttpStatus.OK);
+
 	}
 
 	@GetMapping("/{userId}")

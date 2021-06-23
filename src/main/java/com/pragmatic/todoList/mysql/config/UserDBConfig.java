@@ -47,7 +47,7 @@ public class UserDBConfig {
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(EntityManagerFactoryBuilder builder,
 			@Qualifier("dataSource") DataSource dataSource) {
 		Map<String, Object> properties = new HashMap<>();
-		properties.put("hibernate.hbm2ddl.auto", "create-drop");
+		properties.put("hibernate.hbm2ddl.auto", "update");
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
 		return builder.dataSource(dataSource).properties(properties).packages("com.pragmatic.todoList.mysql")
 				.persistenceUnit("UserEntity").build();
