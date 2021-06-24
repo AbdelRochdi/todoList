@@ -1,6 +1,7 @@
 package com.pragmatic.todoList;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +23,22 @@ public class TodoListApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TodoListApplication.class, args);
+		
+		Thread myThread = new Thread() {
+			public void run() {
+				System.out.println("Hello in thread "+this.getName());
+			}
+		};
+		myThread.setName("myThead +"+UUID.randomUUID());
+		myThread.run();
+		
+		hello();
+	}
+	
+	
+	@Async
+	private static void hello() {
+		System.out.println("hello");
 	}
 	
 	@Bean
@@ -33,7 +51,7 @@ public class TodoListApplication {
 		return new SpringApplicationContext();
 	}
 
-	@Scheduled(fixedDelayString = "PT5S")
+	@Scheduled(fixedDelayString = "PT5S", cron = "")
 	void repititiveTask() throws InterruptedException {
 		logger.info("Now is "+ new Date());
 		Thread.sleep(1000L);

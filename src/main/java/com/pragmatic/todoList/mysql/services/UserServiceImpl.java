@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(rollbackOn = Exception.class)
 	public UserEntity createUserEntity(UserEntity userEntity) throws Exception {
 
-		UserEntity checkUser = userRepository.findByEmail(userEntity.getEmail().toLowerCase());
+		UserEntity checkUser = userRepository.findByEmail(userEntity.getEmail().toLowerCase()).get();
 
 		if (checkUser != null) {
 			throw new Exception("User already exists");
@@ -50,7 +50,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void deleteUser(Long id) {
-		userRepository.deleteById(id);
+		
+		UserEntity userEntity = findUserById(id);
+
+		if (userEntity == null)
+			throw new UsernameNotFoundException("User with id : "+id+" was not found");
+		
+		userRepository.delete(userEntity);
 	}
 
 	public List<UserEntity> findAllUsers(int page, int limit) {
@@ -72,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		UserEntity userEntity = userRepository.findByEmail(email.toLowerCase());
+		UserEntity userEntity = userRepository.findByEmail(email.toLowerCase()).get();
 
 		if (userEntity == null)
 			throw new UsernameNotFoundException(email);
@@ -84,14 +90,25 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserEntity updateUserEntity(String id, UserEntity userEntity) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserEntity updateUserEntity(Long id, UserEntity userEntity) {
+		
+		UserEntity updatedUser = findUserById(id);
+
+		if (userEntity == null)
+			throw new UsernameNotFoundException("User with id : "+id+" was not found");
+		
+		updatedUser.setFirstName(userEntity.getFirstName());
+		updatedUser.setLastName(userEntity.getLastName());
+
+		UserEntity userUpdated = userRepository.save(updatedUser);
+
+		return userUpdated;
 	}
 
 	@Override
 	public UserEntity getUser(String email) {
-		UserEntity userEntity = userRepository.findByEmail(email);
+		
+		UserEntity userEntity = userRepository.findByEmail(email).get();
 
 		if (userEntity == null)
 			throw new UsernameNotFoundException(email);

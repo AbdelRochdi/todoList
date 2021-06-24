@@ -1,5 +1,7 @@
 package com.pragmatic.todoList.mysql.services;
 
+import java.util.Optional;
+
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
@@ -11,45 +13,69 @@ import com.pragmatic.todoList.mysql.entities.UserEntity;
 import com.pragmatic.todoList.mysql.repositories.TaskRepository;
 import com.pragmatic.todoList.mysql.repositories.UserRepository;
 
+/**
+ * @author Abdelghafor
+ *
+ */
 @Service
 @Transactional
 public class TaskServiceImpl implements TaskService {
 
 	@Autowired
 	private TaskRepository taskRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
+	/**
+	 * This method add a task
+	 * 
+	 * @return TaskEntity
+	 * @param TaskEntity 
+	 * 
+	 * 
+	 * @throws NotFoundException this exceptions is thrown when there is no task
+	 */
 	public TaskEntity addTask(TaskEntity taskEntity) {
-		
 		UserEntity userEntity = userRepository.getById(1L);
-		
 		userEntity.addTask(taskEntity);
-				
 		return taskRepository.save(taskEntity);
 	}
 	
+	/**
+	 *
+	 */
 	public void deleteTask(Long id) {
 		taskRepository.deleteById(id);
 	}
-	
-	public Iterable<TaskEntity> findAllTasks(){
+
+	/**
+	 *
+	 */
+	public Iterable<TaskEntity> findAllTasks() {
 		return taskRepository.findAll();
 	}
+
+	/**
+	 *
+	 */
+	public Optional<TaskEntity> findTaskById(Long id) {
+		return taskRepository.findById(id);
+	}
 	
-	public TaskEntity findTaskById(Long id) {
-		return taskRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+	@Override
+	public TaskEntity findTaskByIdOptional(Long id) {
+		return taskRepository.findById(id).orElseThrow(()->new EntityNotFoundException(""));
 	}
 
+	/**
+	 *
+	 */
 	public TaskEntity updateTaskById(TaskEntity taskRequest, Long id) {
-		
 		TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Task"));
-		
 		task.setTitle(taskRequest.getTitle());
 		task.setDueDate(taskRequest.getDueDate());
-		
 		return taskRepository.save(task);
-		
+
 	}
 }

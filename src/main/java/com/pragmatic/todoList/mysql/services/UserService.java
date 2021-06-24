@@ -8,7 +8,7 @@ public interface UserService extends UserDetailsService {
 
 	UserEntity createUserEntity(UserEntity userEntity) throws Exception;
 
-	UserEntity updateUserEntity(String id, UserEntity userEntity);
+	UserEntity updateUserEntity(Long id, UserEntity userEntity);
 
 	UserEntity getUser(String email);
 

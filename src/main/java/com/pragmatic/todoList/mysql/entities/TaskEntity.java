@@ -3,6 +3,7 @@ package com.pragmatic.todoList.mysql.entities;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,9 +12,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tasks", schema = "todolist")
@@ -22,15 +29,20 @@ public class TaskEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@NotBlank
+	@Column(name = "title", length = 100, nullable = false, updatable = false )
 	private String title;
 	private String status;
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	//@JsonFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "yyyy-mm-dd")
 	private Date createdAt;
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDate;
 
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+	@JsonIgnore
+	@ManyToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "user_id")
 	private UserEntity userEntity;
 

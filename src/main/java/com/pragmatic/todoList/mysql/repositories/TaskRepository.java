@@ -7,7 +7,4 @@ import com.pragmatic.todoList.mysql.entities.TaskEntity;
 
 @Repository
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
-
-
-	
 }

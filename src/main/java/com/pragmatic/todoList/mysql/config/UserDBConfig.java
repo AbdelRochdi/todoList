@@ -7,6 +7,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -27,6 +28,10 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableJpaRepositories(basePackages = "com.pragmatic.todoList.mysql", entityManagerFactoryRef = "entityManagerFactory")
 public class UserDBConfig {
 
+	@Value("${mysql.hikari.pool.config}")
+	private int poolSize;
+	
+	
 	@Primary
 	@Bean(name = "datasourceProperties")
 	@ConfigurationProperties(prefix = "spring.user.datasource")
@@ -39,7 +44,10 @@ public class UserDBConfig {
 	@ConfigurationProperties("spring.datasource.hikari")
 	public DataSource primaryDataSource(
 			@Qualifier("datasourceProperties") DataSourceProperties primaryDataSourceProperties) {
-		return primaryDataSourceProperties.initializeDataSourceBuilder().build();
+		
+		HikariDataSource hikariDataSource = new HikariDataSource();
+		hikariDataSource.setMaximumPoolSize(this.poolSize);
+		return hikariDataSource;
 	}
 
 	@Primary
@@ -53,11 +61,11 @@ public class UserDBConfig {
 				.persistenceUnit("UserEntity").build();
 	}
 
-	@Bean
-	@ConfigurationProperties(prefix = "spring.datasource.hikari")
-	public HikariConfig hikariConfig() {
-		return new HikariConfig();
-	}
+//	@Bean
+//	@ConfigurationProperties(prefix = "spring.datasource.hikari")
+//	public HikariConfig hikariConfig() {
+//		return new HikariConfig();
+//	}
 
 	@Primary
 	@Bean(name = "transactionManager")
@@ -66,8 +74,8 @@ public class UserDBConfig {
 		return new JpaTransactionManager(entityManagerFactory);
 	}
 
-	@Bean
-	public DataSource dataSource() {
-		return new HikariDataSource(hikariConfig());
-	}
+//	@Bean
+//	public DataSource dataSource() {
+//		return new HikariDataSource(hikariConfig());
+//	}
 }
