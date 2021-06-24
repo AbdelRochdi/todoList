@@ -20,7 +20,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
@@ -34,7 +33,7 @@ public class UserDBConfig {
 	
 	@Primary
 	@Bean(name = "datasourceProperties")
-	@ConfigurationProperties(prefix = "spring.user.datasource")
+	@ConfigurationProperties(prefix = "spring.datasource.hikari")
 	public DataSourceProperties dataSourceProperties() {
 		return new DataSourceProperties();
 	}

@@ -2,6 +2,7 @@ package com.pragmatic.todoList.mysql.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -30,12 +31,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@Transactional(rollbackOn = Exception.class)
+	@Transactional
 	public UserEntity createUserEntity(UserEntity userEntity) throws Exception {
 
-		UserEntity checkUser = userRepository.findByEmail(userEntity.getEmail().toLowerCase()).get();
+		Optional<UserEntity> checkUser = userRepository.findByEmail(userEntity.getEmail().toLowerCase());
 
-		if (checkUser != null) {
+		if (checkUser.isPresent()) {
 			throw new Exception("User already exists");
 		} else {
 
@@ -50,12 +51,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void deleteUser(Long id) {
-		
+
 		UserEntity userEntity = findUserById(id);
 
 		if (userEntity == null)
-			throw new UsernameNotFoundException("User with id : "+id+" was not found");
-		
+			throw new UsernameNotFoundException("User with id : " + id + " was not found");
+
 		userRepository.delete(userEntity);
 	}
 
@@ -91,12 +92,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserEntity updateUserEntity(Long id, UserEntity userEntity) {
-		
+
 		UserEntity updatedUser = findUserById(id);
 
 		if (userEntity == null)
-			throw new UsernameNotFoundException("User with id : "+id+" was not found");
-		
+			throw new UsernameNotFoundException("User with id : " + id + " was not found");
+
 		updatedUser.setFirstName(userEntity.getFirstName());
 		updatedUser.setLastName(userEntity.getLastName());
 
@@ -107,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserEntity getUser(String email) {
-		
+
 		UserEntity userEntity = userRepository.findByEmail(email).get();
 
 		if (userEntity == null)

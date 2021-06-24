@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pragmatic.todoList.mysql.entities.TaskEntity;
 import com.pragmatic.todoList.mysql.services.TaskService;
-import com.pragmatic.todoList.mysql.services.TaskServiceImpl;
 
 @Controller
 @CrossOrigin
@@ -28,11 +27,7 @@ import com.pragmatic.todoList.mysql.services.TaskServiceImpl;
 public class TaskController {
 
 	@Autowired
-	private TaskService taskService;
-	
-//	public TaskController(TaskServiceImpl taskServiceImpl) {
-//		this.taskService = taskServiceImpl;
-//	}	
+	private TaskService taskService;	
 
 	@GetMapping("/all")
 	public ResponseEntity<Iterable<TaskEntity>> getAllTasks() {

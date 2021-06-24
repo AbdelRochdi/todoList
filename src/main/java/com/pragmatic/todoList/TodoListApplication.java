@@ -51,12 +51,12 @@ public class TodoListApplication {
 		return new SpringApplicationContext();
 	}
 
-	@Scheduled(fixedDelayString = "PT5S", cron = "")
+	@Scheduled(fixedDelayString = "PT5M", cron = "")
 	void repititiveTask() throws InterruptedException {
 		logger.info("Now is "+ new Date());
 		Thread.sleep(1000L);
 	}
-	@Scheduled(fixedDelayString = "PT5S")
+	@Scheduled(fixedDelayString = "PT5M")
 	void repititiveTask2() throws InterruptedException {
 		logger.info("Now is2 "+ new Date());
 		Thread.sleep(1000L);
