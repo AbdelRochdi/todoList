@@ -24,17 +24,19 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
+//	.configurationSource(request -> {
+//	      CorsConfiguration cors = new CorsConfiguration();
+//	      cors.setAllowedOrigins(List.of("http://localhost:3000"));
+//	      cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
+//	      cors.setAllowedHeaders(List.of("*"));
+//	      return cors;
+//	    })
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
-			.cors().configurationSource(request -> {
-			      CorsConfiguration cors = new CorsConfiguration();
-			      cors.setAllowedOrigins(List.of("http://localhost:3000"));
-			      cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
-			      cors.setAllowedHeaders(List.of("*"));
-			      return cors;
-			    })
+			.cors()
 			.and()
 			.csrf().disable()
 			.authorizeRequests()
