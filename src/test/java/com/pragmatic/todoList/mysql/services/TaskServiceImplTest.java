@@ -17,10 +17,10 @@ class TaskServiceImplTest {
 	@Test
 	void testAddNumbers() {
 
-		int expected = 3;
+		int expected = 2;
 		int actual = taskServiceImpl.addNumbers(1, 1);
 
-		assertEquals(expected, actual);
+		assertEquals(expected, actual, "the method should add two numbers");
 	}
 
 }
