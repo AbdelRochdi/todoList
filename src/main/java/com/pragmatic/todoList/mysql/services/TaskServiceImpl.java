@@ -78,4 +78,10 @@ public class TaskServiceImpl implements TaskService {
 		return taskRepository.save(task);
 
 	}
+
+	@Override
+	public int addNumbers(int a, int b) {
+		 
+		return a + b;
+	}
 }

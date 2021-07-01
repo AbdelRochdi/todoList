@@ -6,11 +6,11 @@ import com.pragmatic.todoList.mysql.entities.TaskEntity;
 
 public interface TaskService {
 
-	public TaskEntity addTask(TaskEntity taskEntity);
-	public void deleteTask(Long id);
-	public Iterable<TaskEntity> findAllTasks();
-	public Optional<TaskEntity> findTaskById(Long id);
-	public TaskEntity updateTaskById(TaskEntity taskRequest, Long id);
+	TaskEntity addTask(TaskEntity taskEntity);
+	void deleteTask(Long id);
+	Iterable<TaskEntity> findAllTasks();
+	Optional<TaskEntity> findTaskById(Long id);
+	TaskEntity updateTaskById(TaskEntity taskRequest, Long id);
 	TaskEntity findTaskByIdOptional(Long id);
-
+	int addNumbers(int a, int b);
 }
