@@ -35,7 +35,7 @@ public class TaskEntity {
 	private String status;
 	//@JsonFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "yyyy-mm-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date createdAt;
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDate;
@@ -50,6 +50,8 @@ public class TaskEntity {
 		this.createdAt = new Date();
 		this.status = "Undone";
 	}
+	
+	
 
 	public UserEntity getUserEntity() {
 		return userEntity;
