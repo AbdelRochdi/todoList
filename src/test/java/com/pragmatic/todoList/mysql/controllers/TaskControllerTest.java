@@ -50,6 +50,7 @@ class TaskControllerTest {
 	    	      .andExpect(jsonPath("$", hasSize(2)))
 	    	      .andExpect(jsonPath("$[0].title", is(task.getTitle())));
 		
+	    
 	}
 
 }
