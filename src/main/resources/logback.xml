@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<property name="LOGS_HOME"
-		value="/var/applications/todoList/applogs/" />
+	<property name="LOGS_HOME" value="/var/log/springlogs" />
 
 	<appender name="STDOUT"
 		class="ch.qos.logback.core.ConsoleAppender">
@@ -38,7 +37,7 @@
 
 	<appender name="DEBUG-FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOGS_HOME}debug_audit.log</file>
+		<file>${LOGS_HOME}debug_log.log</file>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
@@ -49,7 +48,73 @@
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- rollover daily -->
-			<fileNamePattern>${LOGS_HOME}debug_audit.%d{yyyy-MM-dd}.%i.log
+			<fileNamePattern>${LOGS_HOME}debug_log.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="TRACE-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS_HOME}trace_log.log</file>
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss};%msg%n
+			</Pattern>
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${LOGS_HOME}trace_log.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="WARN-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS_HOME}warn_log.log</file>
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss};%msg%n
+			</Pattern>
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${LOGS_HOME}warn_log.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="ERROR-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS_HOME}error_log.log</file>
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss};%msg%n
+			</Pattern>
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${LOGS_HOME}error_log.%d{yyyy-MM-dd}.%i.log
 			</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -65,6 +130,24 @@
 	</logger>
 
 	<logger name="com.pragmatic.todoList" level="debug"
+		additivity="false">
+		<appender-ref ref="DEBUG-FILE" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="com.pragmatic.todoList" level="trace"
+		additivity="false">
+		<appender-ref ref="TRACE-FILE" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="com.pragmatic.todoList" level="warn"
+		additivity="false">
+		<appender-ref ref="WARN-FILE" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="com.pragmatic.todoList" level="error"
 		additivity="false">
 		<appender-ref ref="DEBUG-FILE" />
 		<appender-ref ref="STDOUT" />
