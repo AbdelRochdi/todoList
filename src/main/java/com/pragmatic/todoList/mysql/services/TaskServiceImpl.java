@@ -1,5 +1,6 @@
 package com.pragmatic.todoList.mysql.services;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -80,8 +81,16 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public int addNumbers(int a, int b) {
-		 
-		return a + b;
+	public boolean checkDueDate(Date dueDate) {
+				
+		Date now = new Date();
+		
+		if (dueDate.after(now)) {
+			return true;
+		}else {
+			return false; 
+		}
 	}
+
+	
 }

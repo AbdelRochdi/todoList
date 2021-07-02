@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragmatic.todoList.mysql.entities.TaskEntity;
 import com.pragmatic.todoList.mysql.services.TaskService;
 import com.pragmatic.todoList.mysql.services.UserService;
@@ -48,8 +51,69 @@ class TaskControllerTest {
 	    	      .contentType(MediaType.APPLICATION_JSON))
 	    	      .andExpect(status().isOk())
 	    	      .andExpect(jsonPath("$", hasSize(1)))
-	    	      .andExpect(jsonPath("$[0].title", is(task.getTitle())));
+	    	      .andExpect(jsonPath("$[0].title", is(task.getTitle())));   
+	}
+	
+	
+	@Test
+	void testCreateTask() throws Exception {
+		TaskEntity task = new TaskEntity();
+		task.setTitle("test task");
+		task.setDueDate(new SimpleDateFormat("yyyy-MM-dd").parse("2021-07-22"));
+		
+		
+	    given(taskService.addTask(task)).willReturn(task);
+
+	    mvc.perform(
+	    		MockMvcRequestBuilders.
+	    		post("/api/tasks")
+	    		.content(asJsonString(task))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                )
+	    .andExpect(status().isCreated());
+	    
 	    
 	}
+	
+	public static String asJsonString(final Object obj) {
+	    try {
+	        final ObjectMapper mapper = new ObjectMapper();
+	        final String jsonContent = mapper.writeValueAsString(obj);
+	        return jsonContent;
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
+	}
+
+
+	@Test
+	void testGetTaskById() throws Exception {
+		Long id = 3L; 
+		TaskEntity task = new TaskEntity();
+		task.setId(id);
+		task.setTitle("test task");
+		task.setDueDate(new SimpleDateFormat("yyyy-MM-dd").parse("2021-07-22"));
+		
+		given(taskService.findTaskById(3L)).willReturn(Optional.of(task));
+		
+		mvc.perform(get("/api/tasks" + "/" + id)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.title", is(task.getTitle())));
+	}
+	
+	@Test
+	void testDeleteTaskById() {
+		
+	}
+	
+	@Test
+	void testUpdateTask() {
+		
+	}
+	
+	
 
 }
