@@ -15,6 +15,11 @@
 	<appender name="INFO-FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOGS_HOME}info_log.log</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
@@ -30,7 +35,7 @@
 			</fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>15MB</maxFileSize>
+				<maxFileSize>100MB</maxFileSize>
 			</timeBasedFileNamingAndTriggeringPolicy>
 		</rollingPolicy>
 	</appender>
@@ -38,6 +43,11 @@
 	<appender name="DEBUG-FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOGS_HOME}debug_log.log</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
@@ -60,6 +70,11 @@
 	<appender name="TRACE-FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOGS_HOME}trace_log.log</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>TRACE</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
@@ -82,6 +97,11 @@
 	<appender name="WARN-FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOGS_HOME}warn_log.log</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
@@ -104,6 +124,12 @@
 	<appender name="ERROR-FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOGS_HOME}error_log.log</file>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+			
+		</filter>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
@@ -125,36 +151,15 @@
 
 	<logger name="com.pragmatic.todoList" level="info"
 		additivity="false">
-		<appender-ref ref="INFO-FILE" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="com.pragmatic.todoList" level="debug"
-		additivity="false">
-		<appender-ref ref="DEBUG-FILE" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="com.pragmatic.todoList" level="trace"
-		additivity="false">
 		<appender-ref ref="TRACE-FILE" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="com.pragmatic.todoList" level="warn"
-		additivity="false">
-		<appender-ref ref="WARN-FILE" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="com.pragmatic.todoList" level="error"
-		additivity="false">
-		<appender-ref ref="DEBUG-FILE" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<root level="trace">
 		<appender-ref ref="INFO-FILE" />
+		<appender-ref ref="DEBUG-FILE" />
+		<appender-ref ref="WARN-FILE" />
+		<appender-ref ref="ERROR-FILE" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="info" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
