@@ -45,6 +45,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.permitAll()
 			.antMatchers(HttpMethod.GET, "/api/tasks/*")
 			.permitAll()
+			.antMatchers(HttpMethod.GET, "/")
+			.permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.addFilter(getAuthenticationFilter())

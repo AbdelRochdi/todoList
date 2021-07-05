@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<property name="LOGS_HOME" value="/tmp/springlogs/"/>
+	<property name="LOGS_HOME" value="/tmp/springlogs/" />
 
 	<appender name="STDOUT"
 		class="ch.qos.logback.core.ConsoleAppender">
@@ -153,7 +153,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<root level="error">
+	<root level="trace">
 		<appender-ref ref="INFO-FILE" />
 		<appender-ref ref="STDOUT" />
 	</root>
