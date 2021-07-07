@@ -47,11 +47,6 @@ public class TodoListApplication extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
 	public SpringApplicationContext springApplicationContext() {
 		return new SpringApplicationContext();
 	}
@@ -66,6 +61,11 @@ public class TodoListApplication extends SpringBootServletInitializer {
 	void repititiveTask2() throws InterruptedException {
 		logger.info("Now is2 " + new Date());
 		Thread.sleep(1000L);
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 }

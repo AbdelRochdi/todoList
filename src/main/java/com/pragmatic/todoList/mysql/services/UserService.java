@@ -1,10 +1,8 @@
 package com.pragmatic.todoList.mysql.services;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-
 import com.pragmatic.todoList.mysql.entities.UserEntity;
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
 
 	UserEntity createUserEntity(UserEntity userEntity) throws Exception;
 

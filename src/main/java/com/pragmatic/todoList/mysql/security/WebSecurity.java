@@ -1,34 +1,32 @@
 package com.pragmatic.todoList.mysql.security;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.pragmatic.todoList.mysql.services.UserService;
+import com.pragmatic.todoList.mysql.services.MyUserDetailsService;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
-	private final UserService userDetailsService;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;	
-
-	public WebSecurity(UserService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	private final MyUserDetailsService userDetailsService;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final JwtRequestFilter jwtRequestFilter;
+	
+	public WebSecurity(MyUserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder,
+			JwtRequestFilter jwtRequestFilter) {
 		this.userDetailsService = userDetailsService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.jwtRequestFilter = jwtRequestFilter;
 	}
 
-//	.configurationSource(request -> {
-//	      CorsConfiguration cors = new CorsConfiguration();
-//	      cors.setAllowedOrigins(List.of("http://localhost:3000"));
-//	      cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
-//	      cors.setAllowedHeaders(List.of("*"));
-//	      return cors;
-//	    })
-	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
@@ -39,28 +37,15 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
 			.permitAll()
-			.antMatchers(HttpMethod.POST, "/api/tasks")
-			.permitAll()
-			.antMatchers(HttpMethod.GET, "/api/tasks/all")
-			.permitAll()
-			.antMatchers(HttpMethod.GET, "/api/tasks/*")
-			.permitAll()
 			.antMatchers(HttpMethod.GET, "/")
+			.permitAll()
+			.antMatchers(HttpMethod.POST, "/api/users/authenticate")
 			.permitAll()
 			.anyRequest().authenticated()
 			.and()
-			.addFilter(getAuthenticationFilter())
-			.addFilter(new AuthorizationFilter(authenticationManager()))
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-			
-		
-	}
-	
-	protected AuthenticationFilter getAuthenticationFilter() throws Exception {
-		final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
-		filter.setFilterProcessesUrl("/api/users/login");
-		return filter;
+		http.addFilterBefore(jwtRequestFilter,UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	@Override
@@ -68,4 +53,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 	}
 	
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
+	
+	
+
 }

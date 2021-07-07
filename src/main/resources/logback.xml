@@ -149,7 +149,7 @@
 		</rollingPolicy>
 	</appender>
 
-	<logger name="com.pragmatic.todoList" level="info"
+	<logger name="com.pragmatic.todoList" level="warn"
 		additivity="false">
 		<appender-ref ref="TRACE-FILE" />
 		<appender-ref ref="INFO-FILE" />
@@ -159,7 +159,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<root level="info" additivity="false">
+	<root level="warn" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
