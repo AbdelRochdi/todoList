@@ -1,6 +1,5 @@
 package com.pragmatic.todoList.mysql.security;
 
-
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -9,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,50 +18,72 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.pragmatic.todoList.mysql.services.MyUserDetailsService;
 import com.pragmatic.todoList.mysql.utils.JwtUtil;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private MyUserDetailsService userDetailsService;
+	@Autowired
+	private MyUserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+	@Autowired
+	private JwtUtil jwtUtil;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+			throws ServletException, IOException {
 
-        final String authorizationHeader = request.getHeader("Authorization");
+		try {
+			final String authorizationHeader = request.getHeader("Authorization");
 
-        String username = null;
-        String jwt = null;
+			String username = null;
+			String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
-        }
+			if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+				jwt = authorizationHeader.substring(7);
+				username = jwtUtil.extractUsername(jwt);
+			}
 
+			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+				UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+				if (jwtUtil.validateToken(jwt, userDetails)) {
 
-            if (jwtUtil.validateToken(jwt, userDetails)) {
+					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
+					usernamePasswordAuthenticationToken
+							.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+				}
+			}
+		} catch (ExpiredJwtException e) {
+			String isRefreshToken = request.getHeader("isRefreshToken");
+			String requestURL = request.getRequestURL().toString();
+			// allow for Refresh Token creation if following conditions are true.
+			if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refreshtoken")) {
+				allowForRefreshToken(e, request);
+			} else
+				throw e;
+		}
+	
+		chain.doFilter(request,response);
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
-        }
-        chain.doFilter(request, response);
-    }
-
-    @Bean
-	public JwtUtil jwtUtil() {
-		return new JwtUtil();
 	}
-    
-}
 
+	private void allowForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
+
+		// create a UsernamePasswordAuthenticationToken with null values.
+		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+				null, null, null);
+		// After setting the Authentication in the context, we specify
+		// that the current user is authenticated. So it passes the
+		// Spring Security Configurations successfully.
+		SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+		// Set the claims so that in controller we will be using it to create
+		// new JWT
+		request.setAttribute("claims", ex.getClaims());
+
+	}
+
+}

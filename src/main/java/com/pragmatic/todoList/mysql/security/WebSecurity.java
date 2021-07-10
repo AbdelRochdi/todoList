@@ -15,11 +15,11 @@ import com.pragmatic.todoList.mysql.services.MyUserDetailsService;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
-	
+
 	private final MyUserDetailsService userDetailsService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final JwtRequestFilter jwtRequestFilter;
-	
+
 	public WebSecurity(MyUserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder,
 			JwtRequestFilter jwtRequestFilter) {
 		this.userDetailsService = userDetailsService;
@@ -30,35 +30,23 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http
-			.cors()
-			.and()
-			.csrf().disable()
-			.authorizeRequests()
-			.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
-			.permitAll()
-			.antMatchers(HttpMethod.GET, "/")
-			.permitAll()
-			.antMatchers(HttpMethod.POST, "/api/users/authenticate")
-			.permitAll()
-			.anyRequest().authenticated()
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.addFilterBefore(jwtRequestFilter,UsernamePasswordAuthenticationFilter.class);
+		http.cors().and().csrf().disable().authorizeRequests()
+				.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
+				.antMatchers(HttpMethod.GET, "/api/users/confirm").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/users/authenticate").permitAll().anyRequest().authenticated().and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 	}
-	
+
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
-	
 
 }

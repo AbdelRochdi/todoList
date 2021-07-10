@@ -1,7 +1,9 @@
 package com.pragmatic.todoList.mysql.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pragmatic.todoList.mysql.dto.AuthenticationRequest;
 import com.pragmatic.todoList.mysql.dto.AuthenticationResponse;
+import com.pragmatic.todoList.mysql.dto.ResetPasswordResquest;
 import com.pragmatic.todoList.mysql.entities.UserEntity;
 import com.pragmatic.todoList.mysql.services.MyUserDetailsService;
+import com.pragmatic.todoList.mysql.services.TokenService;
 import com.pragmatic.todoList.mysql.services.UserServiceImpl;
 import com.pragmatic.todoList.mysql.utils.JwtUtil;
 
@@ -33,6 +37,9 @@ public class UserController {
 
 	@Autowired
 	private UserServiceImpl userService;
+
+	@Autowired
+	private TokenService tokenService;
 
 	@Autowired
 	private MyUserDetailsService userDetailsService;
@@ -64,6 +71,14 @@ public class UserController {
 	@PostMapping("/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
 			throws Exception {
+
+		Optional<UserEntity> userEntity = userService.getUser(authenticationRequest.getEmail().toLowerCase());
+
+		if (userEntity.isPresent()) {
+			if (userEntity.get().isActive() == false) {
+				throw new Exception("This account is not yet activated");
+			}
+		}
 
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -97,6 +112,29 @@ public class UserController {
 
 		return new ResponseEntity<String>("Project with Id " + userId + " was deleted.", HttpStatus.NO_CONTENT);
 
+	}
+
+	@GetMapping("/confirm")
+	public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
+		String confirm = tokenService.confirmToken(token);
+		
+		return new ResponseEntity<String>(confirm, HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/reset/{userId}")
+	public ResponseEntity<String> resetPasswordEmailNotification(@PathVariable Long userId) throws MessagingException {
+
+		String reset = userService.resetPasswordEmail(userId);
+
+		return new ResponseEntity<String>(reset, HttpStatus.OK);
+
+	}
+	
+	@PostMapping("/reset")
+	public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestBody ResetPasswordResquest resetPasswordResquest) throws Exception {
+		String confirm = tokenService.confirmPasswordToken(token, resetPasswordResquest);
+		
+		return new ResponseEntity<String>(confirm, HttpStatus.ACCEPTED);
 	}
 
 }

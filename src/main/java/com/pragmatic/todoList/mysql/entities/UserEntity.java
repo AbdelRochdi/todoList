@@ -17,6 +17,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "users", schema = "todolist")
@@ -24,6 +25,7 @@ public class UserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(updatable = false, unique = true)
 	private Long id;
 	@NotBlank(message = "Please enter your first name")
 	private String firstName;
@@ -35,10 +37,16 @@ public class UserEntity {
 	@NotBlank(message = "Please enter a valid password")
 	@Size(min = 8, message = "Your password must have at least 8 caracters")
 	private String encryptedPassword;
+	@Column(nullable = false)
+	private boolean isActive = false;
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userEntity")
 	private List<TaskEntity> tasksList;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userEntity", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("userEntity")
+	private List<ConfirmationToken> confirmationTokens;
 
 	public Long getId() {
 		return id;
@@ -98,4 +106,29 @@ public class UserEntity {
 		this.tasksList = tasksList;
 	}
 
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public List<ConfirmationToken> getConfirmationTokens() {
+		return confirmationTokens;
+	}
+
+	public void setConfirmationTokens(List<ConfirmationToken> confirmationTokens) {
+		this.confirmationTokens = confirmationTokens;
+	}
+
+	public void addConfirmationToken(ConfirmationToken confirmationToken) {
+		if (confirmationTokens == null) {
+			confirmationTokens = new ArrayList<ConfirmationToken>();
+		}
+
+		confirmationTokens.add(confirmationToken);
+
+		confirmationToken.setUserEntity(this);
+	}
 }
