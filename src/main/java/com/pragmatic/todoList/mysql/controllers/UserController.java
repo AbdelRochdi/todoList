@@ -1,9 +1,11 @@
 package com.pragmatic.todoList.mysql.controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ import com.pragmatic.todoList.mysql.services.MyUserDetailsService;
 import com.pragmatic.todoList.mysql.services.TokenService;
 import com.pragmatic.todoList.mysql.services.UserServiceImpl;
 import com.pragmatic.todoList.mysql.utils.JwtUtil;
+
+import io.jsonwebtoken.impl.DefaultClaims;
 
 @Controller
 @RequestMapping("/api/users")
@@ -121,6 +125,7 @@ public class UserController {
 		return new ResponseEntity<String>(confirm, HttpStatus.ACCEPTED);
 	}
 	
+	
 	@GetMapping("/reset/{userId}")
 	public ResponseEntity<String> resetPasswordEmailNotification(@PathVariable Long userId) throws MessagingException {
 
@@ -136,5 +141,18 @@ public class UserController {
 		
 		return new ResponseEntity<String>(confirm, HttpStatus.ACCEPTED);
 	}
+	
+	@GetMapping("/refreshtoken")
+	public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
+		// From the HttpRequest get the claims
+		DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
+
+		Map<String, Object> expectedMap = jwtUtil.getMapFromIoJsonwebtokenClaims(claims);
+		String token = jwtUtil.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
+		return ResponseEntity.ok(new AuthenticationResponse(token));
+	}
+	
+
+	
 
 }

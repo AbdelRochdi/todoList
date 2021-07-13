@@ -57,18 +57,18 @@ public class UserServiceImpl implements UserService {
 			confirmationToken.setCreatedAt(LocalDateTime.now());
 			confirmationToken.setExpiresAt(LocalDateTime.now().plusDays(7));
 			confirmationToken.setType("email");
-			
 
 			userEntity.addConfirmationToken(confirmationToken);
 
 			String link = "http://localhost:8000/api/users/confirm?token=" + token;
-			
+
 			Map<String, Object> templateModel = new HashMap<String, Object>();
-			
+
 			templateModel.put("link", link);
 			templateModel.put("button", "Verify Email Now");
 			templateModel.put("text1", "Please verify your email address to");
 			templateModel.put("text2", "get access to thousands of exclusive job listings");
+			templateModel.put("logo", "logo");
 
 			mailingService.sendMessageUsingThymeleafTemplate(userEntity, "TodoList verification email",
 					"C:\\Users\\abdel\\Desktop\\FUNimages\\55.jpg", templateModel);
@@ -132,9 +132,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String resetPasswordEmail(Long userId) throws MessagingException {
-		
+
 		Optional<UserEntity> userEntity = userRepository.findById(userId);
-		
+
 		if (userEntity.isPresent()) {
 			String token = UUID.randomUUID().toString();
 
@@ -144,30 +144,30 @@ public class UserServiceImpl implements UserService {
 			confirmationToken.setCreatedAt(LocalDateTime.now());
 			confirmationToken.setExpiresAt(LocalDateTime.now().plusDays(7));
 			confirmationToken.setType("password");
-			
 
 			userEntity.get().addConfirmationToken(confirmationToken);
 
 			String link = "http://localhost:8000/api/users/reset?token=" + token;
-			
+
 			Map<String, Object> templateModel = new HashMap<String, Object>();
-			
+
 			templateModel.put("link", link);
 			templateModel.put("button", "Reset Password Now");
 			templateModel.put("name", userEntity.get().getFirstName());
 			templateModel.put("text1", "Please click here to reset your password");
+			templateModel.put("logo", "logo");
 
+			
 			mailingService.sendMessageUsingThymeleafTemplate(userEntity.get(), "TodoList Password Reset",
 					"C:\\Users\\abdel\\Desktop\\FUNimages\\55.jpg", templateModel);
 
 			userRepository.save(userEntity.get());
-			
+
 			return "Password reset email has been sent";
-		}else {
-			throw new UsernameNotFoundException("User with id "+userId+" was not found");
+		} else {
+			throw new UsernameNotFoundException("User with id " + userId + " was not found");
 		}
-		
-		
+
 	}
 
 }

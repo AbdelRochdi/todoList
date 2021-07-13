@@ -7,6 +7,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -43,6 +44,7 @@ public class MailingService {
 		System.out.println("Message sent");
 	}
 
+	
 	public void sendEmailWithAttachement(UserEntity user, String body, String subject, String attachement)
 			throws MessagingException {
 
@@ -57,10 +59,13 @@ public class MailingService {
 		message.setTo(to);
 		message.setText(body, true);
 		message.setSubject(subject);
+		message.addInline("logo", new ClassPathResource("static/images/logo.png"),"image/png");
+
 
 		FileSystemResource fileResource = new FileSystemResource(new File(attachement));
 
 		message.addAttachment(fileResource.getFilename(), fileResource);
+		
 
 		mailSender.send(mimeMessage);
 
@@ -72,6 +77,7 @@ public class MailingService {
 		Context thymeleafContext = new Context();
 
 		thymeleafContext.setVariables(templateModel);
+		
 
 		String htmlBody = thymeleafTemplateEngine.process("notification-email.html", thymeleafContext);
 		sendEmailWithAttachement(user, htmlBody, subject, attachement);
